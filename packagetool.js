@@ -163,4 +163,4 @@ class PackageTool {
   };
 }
 
-exports = PackageTool;
+exports.default = PackageTool;
