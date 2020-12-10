@@ -118,49 +118,6 @@ class PackageTool {
     zip.directory(this.options.outDir, this.manifest.name);
     await zip.finalize();
   };
-
-  // Dev environment
-  getInstallPath = () => {
-    this.loadManifest();
-    const name = fs.readJSONSync("package.json").name;
-    const config = fs.readJSONSync("foundryconfig.json");
-
-    // Different types of extensions go in different destinations
-    const extensionDir = {
-      "module.json": "modules",
-      "system.json": "systems",
-    }[this.manifestType];
-
-    if (!config.dataPath) {
-      throw Error("No User Data path defined in foundryconfig.json");
-    }
-
-    if (!fs.existsSync(path.join(config.dataPath, "Data"))) {
-      throw Error("User Data path invalid, no Data directory found");
-    }
-
-    return path.join(config.dataPath, "Data", extensionDir, name);
-  };
-
-  // Link build to User Data folder
-  linkUserData = async () => {
-    const linkDir = this.getInstallPath();
-    if (!fs.existsSync(linkDir)) {
-      console.log(chalk.green(`Linking build to ${chalk.blueBright(linkDir)}`));
-      await fs.symlink(path.resolve(this.options.outDir), linkDir);
-    }
-  };
-
-  // Unlink build to User Data folder
-  unlinkUserData = async () => {
-    const linkDir = this.getInstallPath();
-    if (!fs.existsSync(linkDir)) {
-      console.log(
-        chalk.yellow(`Removing build in ${chalk.blueBright(linkDir)}`)
-      );
-    }
-    await fs.remove(linkDir);
-  };
 }
 
 module.exports = PackageTool;
