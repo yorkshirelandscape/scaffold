@@ -1,7 +1,7 @@
 const PackageTool = require("./packagetool");
 const devutils = require("./devutils");
 
-exports = {
+module.exports = {
   PackageTool,
   ...devutils,
 };
