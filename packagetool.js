@@ -12,7 +12,12 @@ const defaultOptions = {
 // CI only Helpers
 const zipName = (manifest) => `${manifest.name}-v${manifest.version}.zip`;
 const permaLink = (fileName) =>
-  `${process.env.CI_API_V4_URL}/projects/${process.env.CI_PROJECT_ID}/jobs/artifacts/${process.env.CI_COMMIT_REF_NAME}/raw/${fileName}?job=${process.env.CI_JOB_NAME}`;
+  `${process.env.CI_API_V4_URL}/projects/${process.env.CI_PROJECT_PATH.replace(
+    "/",
+    "%2F"
+  )}/jobs/artifacts/${process.env.CI_COMMIT_REF_NAME}/raw/${fileName}?job=${
+    process.env.CI_JOB_NAME
+  }`;
 // Manifest should point to latest in branch, not itself.
 const permaLinkLatest = (fileName) => {
   const branch = process.env.CI_COMMIT_BRANCH || "master";
