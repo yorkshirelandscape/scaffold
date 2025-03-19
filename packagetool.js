@@ -9,19 +9,24 @@ const defaultOptions = {
   packDir: "package",
 };
 
-// CI only Helpers
-const zipName = (manifest) => `${manifest.name}-v${manifest.version}.zip`;
-const permaLink = (fileName) =>
+const getURLBase = () =>
   `${process.env.CI_API_V4_URL}/projects/${process.env.CI_PROJECT_PATH.replace(
     "/",
     "%2F"
-  )}/jobs/artifacts/${process.env.CI_COMMIT_REF_NAME}/raw/${fileName}?job=${
+  )}/jobs/artifacts`;
+
+// CI only Helpers
+const zipName = (manifest) => `${manifest.name}-v${manifest.version}.zip`;
+const permaLink = (fileName) =>
+  `${getURLBase()}/${process.env.CI_COMMIT_REF_NAME}/raw/${fileName}?job=${
     process.env.CI_JOB_NAME
   }`;
 // Manifest should point to latest in branch, not itself.
 const permaLinkLatest = (fileName) => {
   const branch = process.env.CI_COMMIT_BRANCH || "master";
-  return `${process.env.CI_API_V4_URL}/projects/${process.env.CI_PROJECT_ID}/jobs/artifacts/${branch}/raw/${fileName}?job=${process.env.CI_JOB_NAME}`;
+  return `${getURLBase()}/${branch}/raw/${fileName}?job=${
+    process.env.CI_JOB_NAME
+  }`;
 };
 
 // Make a dirty or unstable version
