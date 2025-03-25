@@ -9,25 +9,28 @@ const defaultOptions = {
   packDir: "package",
 };
 
-const getURLBase = () =>
-  `${process.env.CI_API_V4_URL}/projects/${process.env.CI_PROJECT_PATH.replace(
-    "/",
-    "%2F"
-  )}/jobs/artifacts`;
-
 // CI only Helpers
 const zipName = (manifest) => `${manifest.name}-v${manifest.version}.zip`;
-const permaLink = (fileName) =>
-  `${getURLBase()}/${process.env.CI_COMMIT_REF_NAME}/raw/${fileName}?job=${
-    process.env.CI_JOB_NAME
-  }`;
+
+// Get the link from job artifacts. Used for unstable branch only
+function getArtifactLink(fileName) {
+  return `${process.env.CI_PROJECT_URL}/-/jobs/artifacts/${process.env.CI_COMMIT_REF_NAME}/raw/${fileName}?job=${process.env.CI_JOB_NAME}`;
+}
 // Manifest should point to latest in branch, not itself.
-const permaLinkLatest = (fileName) => {
+function getArtifactLinkLatest(fileName) {
   const branch = process.env.CI_COMMIT_BRANCH || "master";
-  return `${getURLBase()}/${branch}/raw/${fileName}?job=${
-    process.env.CI_JOB_NAME
-  }`;
-};
+  return `${process.env.CI_PROJECT_URL}/-/jobs/artifacts/${branch}/raw/${fileName}?job=${process.env.CI_JOB_NAME}`;
+}
+
+// Get versioned link from releases
+function getReleaseLink(fileName) {
+  return `${process.env.CI_PROJECT_URL}/-/releases/${process.env.CI_COMMIT_REF_NAME}/downloads/${fileName}`;
+}
+
+// Get link from releases
+function getReleaseLinkLatest(fileName) {
+  return `${process.env.CI_PROJECT_URL}/-/releases/permalink/latest/downloads/${fileName}`;
+}
 
 // Make a dirty or unstable version
 function resolveVersion(packageVersion) {
@@ -81,11 +84,13 @@ class PackageTool {
     };
 
     if (process.env.CI) {
-      newManifest.manifest = permaLinkLatest(this.manifestType);
-      newManifest.download = permaLink(zipName(newManifest));
-
       if (process.env.CI_COMMIT_REF_SLUG === "develop") {
+        newManifest.manifest = getArtifactLinkLatest(this.manifestType);
+        newManifest.download = getArtifactLink(zipName(newManifest));
         newManifest.title = newManifest.title + "(unstable branch)";
+      } else {
+        newManifest.manifest = getReleaseLinkLatest(this.manifestType);
+        newManifest.download = getReleaseLink(zipName(newManifest));
       }
     }
 
