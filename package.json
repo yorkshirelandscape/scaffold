@@ -1,20 +1,28 @@
 {
-  "name": "build-tools",
-  "version": "0.2.0",
-  "description": "",
+  "name": "scaffold",
+  "version": "0.1.0",
+  "description": "Project scaffolding for Foundry VTT modules forked from Sunspots' build-tools",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/fvtt-modules-lab/build-tools.git"
+    "url": "git@github.com:yorkshirelandscape/scaffold.git"
   },
-  "author": "Sunspots",
+  "authors": [
+    { "name": "Sunspots" },
+    {
+			"name": "Andrew Howard",
+			"email": "andrew.bryce.howard@gmail.com",
+			"discord": "volfied",
+			"url": "https://github.com/yorkshirelandscape"
+		}
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/fvtt-modules-lab/build-tools/issues"
+    "url": "https://github.com/yorkshirelandscape/scaffold/issues"
   },
-  "homepage": "https://gitlab.com/fvtt-modules-lab/build-tools#readme",
+  "homepage": "https://github.com/yorkshirelandscape/scaffold",
   "dependencies": {
     "archiver": "^5.1.0",
     "chalk": "^4.1.1",
